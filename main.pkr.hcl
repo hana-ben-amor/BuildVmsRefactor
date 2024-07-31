@@ -28,8 +28,8 @@ variable vboxmanage{
 variable floppy_files{}
 variable communicator{}
 variable ssh_wait_timeout{}
+
 source "virtualbox-iso" "vm" {
- 
   boot_command= "${var.boot_command}"
   disk_size               = "${var.disk_size}"
   guest_os_type           = "${var.virtualbox_guest_os_type}"
@@ -77,6 +77,31 @@ source "qemu" "vm" {
   vm_name                 = var.vm_name
 }
 
+
+source "vmware-iso" "vm" {
+ 
+  boot_command= "${var.boot_command}"
+  disk_size               = "${var.disk_size}"
+  guest_os_type           = "${var.virtualbox_guest_os_type}"
+  hard_drive_interface    = "sata"
+  headless                = "${var.headless}"
+  http_directory          = "./http"
+  iso_checksum            = "${var.iso_checksum_type}:${var.iso_checksum}"
+  iso_urls                = [
+    "${var.iso_url}"
+  ]
+  output_directory        = "${var.output_directory}" 
+  communicator="${var.communicator}"
+  ssh_username            = "${var.ssh_username}"
+  ssh_password            = "${var.ssh_password}"
+  floppy_files            = "${var.floppy_files}"
+  shutdown_command        = "echo '${var.ssh_password}'|sudo -S shutdown -P now" 
+  shutdown_timeout        = "30m"
+  ssh_wait_timeout        = "${var.ssh_wait_timeout}"
+  vm_name                 = "${var.vm_name}"
+  format                  = "ova"
+
+}
 
 
 build {
