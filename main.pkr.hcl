@@ -56,27 +56,28 @@ source "virtualbox-iso" "vm" {
 
 }
 
-source "qemu" "vm" {
-  boot_command            = var.boot_command
-  disk_size               = var.disk_size
-  memory                  = var.memory
-  cpus                    = var.cpus
-  iso_checksum            = "${var.iso_checksum_type}:${var.iso_checksum}"
-  iso_url                 = var.iso_url
-  output_directory        = var.output_directory
-  communicator            = var.communicator
-  ssh_username            = var.ssh_username
-  ssh_password            = var.ssh_password
-  shutdown_command        = "echo '${var.ssh_password}'|sudo -S shutdown -P now"
-  shutdown_timeout        = "30m"
-  ssh_wait_timeout        = var.ssh_wait_timeout
-  boot_wait               = "10s"
-  accelerator             = "kvm"
-  qemu_args               = ["-device", "virtio-balloon-pci"]
-  format                  = "qcow2"
-  vm_name                 = var.vm_name
-}
 
+source "qemu" "vm" {
+  boot_command= "${var.boot_command}"
+  disk_size               = "${var.disk_size}"
+  headless                = "${var.headless}"
+  http_directory          = "./http"
+  iso_checksum            = "${var.iso_checksum_type}:${var.iso_checksum}"
+  iso_urls                = [
+    "${var.iso_url}"
+  ]
+  output_directory        = "${var.output_directory}" 
+  communicator="${var.communicator}"
+  ssh_username            = "${var.ssh_username}"
+  ssh_password            = "${var.ssh_password}"
+  floppy_files            = "${var.floppy_files}"
+  shutdown_command        = "echo '${var.ssh_password}'|sudo -S shutdown -P now" 
+  shutdown_timeout        = "30m"
+  ssh_wait_timeout        = "${var.ssh_wait_timeout}"
+  vm_name                 = "${var.vm_name}"
+  accelerator             = "tcg"
+  format                  = "qcow2"
+}
 
 source "vmware-iso" "vm" {
  
